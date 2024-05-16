@@ -1,0 +1,30 @@
+header{
+    display: flex;
+    justify-content: center;
+}
+.logo, .Top_menu{
+    margin-right: 25px;
+    display: inline-block;
+    vertical-align: middle;
+}
+.Top_menu li{
+    margin-right: 25px;
+    display: inline-block;
+    vertical-align: middle;
+}
+.Top_menu a{
+    vertical-align: middle;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    color: white;
+    text-decoration: none;
+}
+.Top_menu a:hover{
+    color:aqua;
+}
+.logo h1{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 30px;
+    vertical-align: middle;
+    color:white;
+}

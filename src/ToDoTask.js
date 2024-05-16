@@ -1,13 +1,11 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
+import { todoDelete, todoUpdateState } from './actions';
 
 class ToDoTask extends React.Component {
 	constructor(props) {
 		super(props)
-		
-		this.state = {
-			done: this.props.task.done
-		}
 		
 		this.onStatusClick = this.onStatusClick.bind(this);
 		this.onDeleteClick = this.onDeleteClick.bind(this);
@@ -16,10 +14,10 @@ class ToDoTask extends React.Component {
 	onStatusClick(e) {
 		e.preventDefault();
 		
-		fetch(`tasks/${this.props.task._id}`, {
+		fetch(`tasks/${this.props.tank._id}`, {
 				method: 'PATCH',
 				body: JSON.stringify({
-					done: !this.state.done
+					done: !this.props.tank.done
 				}),
 				headers : {
 					'Content-Type': 'application/json'
@@ -27,10 +25,7 @@ class ToDoTask extends React.Component {
 			}).then((res) => {
 			if(res.status === 200) {
 				console.log('Updated');
-				
-				this.setState({
-					done: !this.state.done
-				});
+				this.props.dispatch(todoUpdateState(this.props.tank._id));
 			}
 			else {
 				console.log('Not updated');
@@ -41,12 +36,12 @@ class ToDoTask extends React.Component {
 	onDeleteClick(e) {
 		e.preventDefault();
 		
-		fetch(`tasks/${this.props.task._id}`, {
+		fetch(`tasks/${this.props.tank._id}`, {
 				method: 'DELETE'
 			}).then((res) => {
 			if(res.status === 200) {
 				console.log('Deleted');
-				this.props.onTaskDelete(this.props.task._id);
+				this.props.dispatch(todoDelete(this.props.tank._id));
 			}
 			else {
 				console.log('Not deleted');
@@ -54,119 +49,30 @@ class ToDoTask extends React.Component {
 		});
 	}
 	
-	render () {
-			return (
-				<li> 
-					<span>{this.props.task.name} </span>
-					<span>{this.props.task.description} </span>
-					<span onClick ={this.onStatusClick}>{this.state.done ? 'Done' : 'Todo'} </span>
-					<button onClick={this.onDeleteClick}>Delete</button>
+	render() {
+		return (
+				<li>
+					<div className="display">
+						<div className="widget-content-left">
+							<div className="widget-heading, display_I">
+								{this.props.tank.done ? <div className="green"></div> : <div className="red"></div>}
+								&nbsp;{this.props.tank.name}
+							</div>	
+							<div>
+								<div className="widget-subheading">
+									<div>{this.props.tank.description}
+									</div>
+								</div>
+							</div>
+						</div>
+						<div>
+							<span onClick={this.onStatusClick} className="Buton">{this.props.tank.done ? 'Исправен' : 'Неисправен'}</span>
+							<button className="border-0 btn-transition btn btn-outline-danger" onClick={this.onDeleteClick}><i className="far fa-trash-alt delete"></i></button>
+						</div>
+					</div>
 				</li>
 			)
 		}
 }
 
-export default ToDoTask;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*import ToDoTaskAdd from './ToDoTaskAdd';
-
-class App extends React.Component {
-	constructor(props) {
-		super(props)
-		
-		this.state = {
-			tasks: []
-		}
-		
-		this.onTaskDelete = this.onTaskDelete.bind(this);
-	}
-	
-	componentDidMount() {
-		fetch('tasks').then(function(res) {
-			return res.json();
-		}).then((data) => {
-			this.setState({
-				tasks: data
-			});
-		});
-	}
-	
-	onTaskDelete(_id) {
-		this.setState ({
-			tasks: this.state.tasks.filter(function(task) {
-				return task._id !==_id;
-			})
-		});
-	}
-	
-	render() {
-		return (
-			<div className="App">
-				<ToDoTaskAdd />
-				<ul>
-				{
-					this.state.tasks.map((task) => {
-						return (
-							<ToDoTask task={task} onTaskDelete={this.onTaskDelete} key={task._id} />
-						)
-					})
-				}
-				</ul>
-			</div>
-		);
-	}
-}
-
-export default App; */
-		/*this.onStatusClick = this.onStatusClick.bind(this);
-		this.onDeleteClick = this.onDeleteClick.bind(this);
-	}
-	
-	onStatusClick(e) {
-		e.preventDefault();
-		
-		this.setState({
-			done: !this.state.done
-		});
-	}
-	
-	onDeleteClick(e) {
-		e.preventDefault();
-		
-		fetch(`tasks/$(this.props.task._id)`, {
-			method: 'DELETE'
-		}).then((res) => {
-			if (res.status === 200) {
-				console.log('Delete');
-				this.props.onTaskDelete(this.props.task._id);
-			}
-			else {
-				console.log('Not deleted');
-			}
-		});
-	}
-	
-	render() {
-		return (
-	<li onClick={this.onStatusClick}>{this.props.task.name} - {this.state.done ? 'Done' : 'Todo'}  <button onClick={this.onDeleteClick}>Delete</button></li>
-		)
-	}
-}
-
-export default ToDoTask; */
+export default connect() (ToDoTask);

@@ -1,90 +1,54 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import ToDoTask from './ToDoTask';
 
+
+
 class ToDoList extends React.Component {
-	render () {
-		return (
-			<div className="List">
-				<ul>
-				{
-					this.props.tasks.map((task) => {
-						return (
-							<ToDoTask task ={task} onTaskDelete = {this.props.onTaskDelete}  key={task._id}/>
-						)
-					})
-				}
-				</ul>
-			</div>
-		);
-	}
-}
-
-export default ToDoList;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*import ToDoTaskAdd from './ToDoTaskAdd';
-
-class App extends React.Component {
-	constructor(props) {
-		super(props)
-		
-		this.state = {
-			tasks: []
-		}
-		
-		this.onTaskDelete = this.onTaskDelete.bind(this);
-	}
-	
-	componentDidMount() {
-		fetch('tasks').then(function(res) {
-			return res.json();
-		}).then((data) => {
-			this.setState({
-				tasks: data
-			});
-		});
-	}
-	
-	onTaskDelete(_id) {
-		this.setState ({
-			tasks: this.state.tasks.filter(function(task) {
-				return task._id !==_id;
-			})
-		});
-	}
-	
 	render() {
 		return (
-			<div className="App">
-				<ToDoTaskAdd />
-				<ul>
-				{
-					this.state.tasks.map((task) => {
-						return (
-							<ToDoTask task={task} onTaskDelete={this.onTaskDelete} key={task._id} />
-						)
-					})
-				}
-				</ul>
+			<div className="mar_border">
+				<div className="cover-img">
+					<div className="cover-inner">
+					</div>
+				</div>
+				<div className="display">
+					<div>
+						<h4><i className="fa fa-tasks"></i>&nbsp;Tank List</h4>
+					</div>
+					<div className="input-buttons, display">
+						<NavLink to='/add'><h5>Добавить танк</h5></NavLink>
+					</div>
+				</div>
+				
+				<div className="scroll-area-sm">
+					<perfect-scrollbar className="ps-show-limits">
+					<div style={{position: "static"}} className="ps ps--active-y">
+						<div className="ps-content">
+							<ul className=" list-group list-group-flush">
+								{
+									this.props.tasks.map((tank) => {
+										return (
+											<ToDoTask tank={tank} key={tank._id} />
+										)
+									})
+								}
+							</ul>
+						</div>
+					</div>
+					</perfect-scrollbar>
+				</div>
 			</div>
 		);
 	}
 }
 
-export default App; */
+function mapStateToProps(state) {
+	return {
+		tasks: [...state.tasks]
+	}
+}
+
+export default connect(mapStateToProps)(ToDoList);

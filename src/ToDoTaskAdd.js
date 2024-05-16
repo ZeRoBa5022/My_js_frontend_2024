@@ -1,6 +1,8 @@
 import React from 'react';
-import { useNavigate} from 'react-router-dom';
+import { useNavigate, NavLink} from 'react-router-dom';
+import { connect } from 'react-redux';
 
+import { todoAdd } from './actions';
 
 class ToDoTaskAddInner extends React.Component {
 	constructor(props) {
@@ -47,18 +49,32 @@ class ToDoTaskAddInner extends React.Component {
 		}).then((res) => {
 			return res.json();
 		}).then((data) => {
-			this.props.onTaskAdd(data);
+			this.props.dispatch(todoAdd(data._id, data.name, data.description));
 			this.props.history('/');
 		});
 	}
 	
 	render () {
 		return (
-			<form onSubmit={this.onAddFormSubmit}>
-				<input type="text" value={this.state.name} onChange={this.onNameChange} placeholder="Name" />
-				<input type="text" value={this.state.description} onChange={this.onDescriptionChange} placeholder="Description" />
-				<input type="submit" value="Add" />
-			</form>
+			<div className="todoList, mar_border">
+				<div>
+					<h4><i className="fa fa-tasks"></i>&nbsp;Добавление танка</h4>
+				</div>
+				<div>
+					<form onSubmit={this.onAddFormSubmit}>
+					<div>
+						<div>
+							<input type="text" value={this.state.name} onChange={this.onNameChange} placeholder='Название танка' className="button"/>
+							<input type="text" value={this.state.description} onChange={this.onDescriptionChange} placeholder='Описание'className="button"/>
+							<input type="submit" value="Прикатить" className="Buton"/>
+						</div>
+					</div>
+					</form>
+				</div>
+				<div className="d-block text-right card-footer">
+					<NavLink to='/' className="Buton">Вернуться в ангар</NavLink>
+				</div>
+			</div>
 		)
 	}
 }
@@ -69,4 +85,4 @@ const ToDoTaskAdd = (props) => {
 	)
 }
 
-export default ToDoTaskAdd;
+export default connect()(ToDoTaskAdd);
